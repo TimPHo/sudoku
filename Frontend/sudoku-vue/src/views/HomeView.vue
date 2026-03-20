@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { API_BASE_URL } from '@/config'
 
 type SudokuResponseDto = {
   board: number[][]
@@ -7,8 +8,6 @@ type SudokuResponseDto = {
   message: string
 }
 
-const API_BASE_URL = 'https://sudoku-wa-h8bcdyfedzdmcygj.westus3-01.azurewebsites.net'   // azure
-// const API_BASE_URL = 'https://localhost:7237'   // change to match backend port on local
 const board = ref<number[][]>(createEmptyBoard())
 const originalBoard = ref<number[][]>(createEmptyBoard())
 const message = ref('')

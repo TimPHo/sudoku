@@ -16,9 +16,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("VueLocal", policy =>
     {
+        if (builder.Environment.IsDevelopment())
+            policy.WithOrigins("http://localhost:5173", "https://localhost:5173");
+        else
+            policy.AllowAnyOrigin();
+
         policy
-//            .WithOrigins("http://localhost:5173", "https://localhost:5173")   // local only
-            .AllowAnyOrigin()       // release only
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
