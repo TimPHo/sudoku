@@ -26,3 +26,6 @@ App runs on: http://localhost:5173
 ## Notes
 - Make sure backend is running before using Solve
 - Check CORS if API calls fail
+
+## Demo
+👉 https://proud-moss-0a980341e.4.azurestaticapps.net/

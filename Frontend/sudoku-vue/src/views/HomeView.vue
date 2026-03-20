@@ -181,7 +181,7 @@ h1 {
 
 .subtitle {
   margin-bottom: 20px;
-  color: #555;
+  color: #facc15;
 }
 
 :deep(.board) {
