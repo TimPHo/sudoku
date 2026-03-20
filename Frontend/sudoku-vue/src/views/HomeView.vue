@@ -8,7 +8,7 @@ type SudokuResponseDto = {
 }
 
 const API_BASE_URL = 'https://sudoku-wa-h8bcdyfedzdmcygj.westus3-01.azurewebsites.net'   // azure
-// const API_BASE_URL = 'https://localhost:7237'   // change to match backend port    // local
+// const API_BASE_URL = 'https://localhost:7237'   // change to match backend port on local
 const board = ref<number[][]>(createEmptyBoard())
 const originalBoard = ref<number[][]>(createEmptyBoard())
 const message = ref('')
@@ -66,7 +66,7 @@ function onCellInput(row: number, col: number, event: Event) {
   const raw = input.value.trim()
 
   if (raw === '') {
-    board.value[row][col] = 0
+    board.value[row]![col] = 0
     input.value = ''
     return
   }
@@ -75,12 +75,12 @@ function onCellInput(row: number, col: number, event: Event) {
   const value = Number(lastChar)
 
   if (!Number.isInteger(value) || value < 1 || value > 9) {
-    board.value[row][col] = 0
+    board.value[row]![col] = 0
     input.value = ''
     return
   }
 
-  board.value[row][col] = value
+  board.value[row]![col] = value
   input.value = String(value)
 
   moveToNextCell(row, col)
@@ -106,7 +106,7 @@ function onCellKeydown(row: number, col: number, event: KeyboardEvent) {
       break
     case 'Backspace':
     case 'Delete':
-      board.value[row][col] = 0
+      board.value[row]![col] = 0
       break
   }
 }
@@ -167,7 +167,7 @@ function boxClass(row: number, col: number) {
 }
 
 function isSolvedCell(row: number, col: number): boolean {
-  return originalBoard.value[row][col] === 0 && board.value[row][col] !== 0
+  return originalBoard.value[row]![col] === 0 && board.value[row]![col] !== 0
 }
 </script>
 
