@@ -17,7 +17,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("VueLocal", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "https://localhost:5173")
+//            .WithOrigins("http://localhost:5173", "https://localhost:5173")   // local only
+            .AllowAnyOrigin()       // release only
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -29,15 +30,12 @@ builder.Services.AddScoped<ISudokuService, SudokuService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseCors("VueLocal");
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapGet("/", () => "Sudoku API is running");
 app.Run();

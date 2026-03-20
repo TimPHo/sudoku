@@ -7,7 +7,8 @@ type SudokuResponseDto = {
   message: string
 }
 
-const API_BASE_URL = 'https://localhost:7237'   // change to match backend port
+const API_BASE_URL = 'https://sudoku-wa-h8bcdyfedzdmcygj.westus3-01.azurewebsites.net'   // azure
+// const API_BASE_URL = 'https://localhost:7237'   // change to match backend port    // local
 const board = ref<number[][]>(createEmptyBoard())
 const originalBoard = ref<number[][]>(createEmptyBoard())
 const message = ref('')
