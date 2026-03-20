@@ -195,8 +195,8 @@ h1 {
 }
 
 :deep(.cell) {
-  width: 44px;
-  height: 44px;
+  width: 33px;
+  height: 33px;
   border: 1px solid #bbb;
   text-align: center;
   font-size: 20px;

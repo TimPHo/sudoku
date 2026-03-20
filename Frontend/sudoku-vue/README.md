@@ -1,48 +1,66 @@
-# sudoku-vue
+# Sudoku Vue App
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple Sudoku web application built with **Vue 3 + Vite**.  
+This app allows users to enter Sudoku puzzles, test solutions, and interact with a clean UI.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- 9x9 Sudoku board UI
+- Input numbers (1–9) with validation
+- Highlight original vs user-entered values
+- Communicates with backend API for solving
+- Simple and responsive interface
 
-## Recommended Browser Setup
+## Tech Stack
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Vue 3 (Composition API)
+- Vite
+- TypeScript
+- Axios (API calls)
 
-## Type Support for `.vue` Imports in TS
+## Project Structure
+src/
+├── components/ # Reusable UI components (e.g., SudokuBoard)
+├── views/ # Main pages (e.g., HomeView)
+├── services/ # API calls
+├── ultilities/ # Helper methods
+├── models/ # Data models / types
+├── App.vue
+└── main.ts
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Getting Started
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+### Install dependencies 
+Run locally
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
+App will run at:
+http://localhost:5173
 
-### Type-Check, Compile and Minify for Production
-
-```sh
+## Build for production
 npm run build
-```
 
-### Lint with [ESLint](https://eslint.org/)
+## Backend API
 
-```sh
-npm run lint
-```
+This frontend connects to the Sudoku API:
+
+Default: https://localhost/7237
+
+Make sure backend is running before using solve feature
+
+## Demo
+https://proud-moss-0a980341e.4.azurestaticapps.net/
+
+## Notes
+This project was built as a learning/demo application
+Only minimal features are implemented; improvements are welcome
+
+## Future Improvements
+Auto-solve visualization
+Difficulty level
+Better UI/UX styling
+Error highlighting
+Mobile optimization
+Tests & UI validation
