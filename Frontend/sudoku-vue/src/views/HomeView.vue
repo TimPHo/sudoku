@@ -7,15 +7,38 @@ type SudokuResponseDto = {
   message: string
 }
 
-const API_BASE_URL = 'https://localhost:7237'   // change to match backend port
+const API_BASE_URL = 'https://localhost:7040'
 const board = ref<number[][]>(createEmptyBoard())
 const message = ref('')
 const isLoading = ref(false)
 
-const displayBoard = computed(() => board.value)
-
 function createEmptyBoard(): number[][] {
   return Array.from({ length: 9 }, () => Array(9).fill(0))
+}
+
+const displayBoard = computed(() => board.value)
+
+function getCellId(row: number, col: number): string {
+  return `cell-${row}-${col}`
+}
+
+function focusCell(row: number, col: number) {
+  if (row < 0 || row > 8 || col < 0 || col > 8) return
+
+  const element = document.getElementById(getCellId(row, col)) as HTMLInputElement | null
+  element?.focus()
+  element?.select()
+}
+
+function moveToNextCell(row: number, col: number) {
+  if (col < 8) {
+    focusCell(row, col + 1)
+    return
+  }
+
+  if (row < 8) {
+    focusCell(row + 1, 0)
+  }
 }
 
 function onCellInput(row: number, col: number, event: Event) {
@@ -28,7 +51,8 @@ function onCellInput(row: number, col: number, event: Event) {
     return
   }
 
-  const value = Number(raw)
+  const lastChar = raw.slice(-1)
+  const value = Number(lastChar)
 
   if (!Number.isInteger(value) || value < 1 || value > 9) {
     board.value[row][col] = 0
@@ -38,6 +62,37 @@ function onCellInput(row: number, col: number, event: Event) {
 
   board.value[row][col] = value
   input.value = String(value)
+
+  moveToNextCell(row, col)
+}
+
+function onCellKeydown(row: number, col: number, event: KeyboardEvent) {
+  switch (event.key) {
+    case 'ArrowUp':
+      event.preventDefault()
+      focusCell(row - 1, col)
+      break
+
+    case 'ArrowDown':
+      event.preventDefault()
+      focusCell(row + 1, col)
+      break
+
+    case 'ArrowLeft':
+      event.preventDefault()
+      focusCell(row, col - 1)
+      break
+
+    case 'ArrowRight':
+      event.preventDefault()
+      focusCell(row, col + 1)
+      break
+
+    case 'Backspace':
+    case 'Delete':
+      board.value[row][col] = 0
+      break
+  }
 }
 
 async function solveBoard() {
@@ -75,6 +130,7 @@ async function solveBoard() {
 function clearBoard() {
   board.value = createEmptyBoard()
   message.value = ''
+  focusCell(0, 0)
 }
 
 function boxClass(row: number, col: number) {
@@ -94,6 +150,7 @@ function boxClass(row: number, col: number) {
       <div v-for="(row, rowIndex) in displayBoard" :key="rowIndex" class="row">
         <input
           v-for="(cell, colIndex) in row"
+          :id="getCellId(rowIndex, colIndex)"
           :key="`${rowIndex}-${colIndex}`"
           :value="cell === 0 ? '' : cell"
           type="text"
@@ -102,6 +159,7 @@ function boxClass(row: number, col: number) {
           class="cell"
           :class="boxClass(rowIndex, colIndex)"
           @input="onCellInput(rowIndex, colIndex, $event)"
+          @keydown="onCellKeydown(rowIndex, colIndex, $event)"
         />
       </div>
     </div>
