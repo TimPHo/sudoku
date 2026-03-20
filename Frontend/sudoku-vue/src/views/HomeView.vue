@@ -7,13 +7,32 @@ type SudokuResponseDto = {
   message: string
 }
 
-const API_BASE_URL = 'https://localhost:7040'
+const API_BASE_URL = 'https://localhost:7237'   // change to match backend port
 const board = ref<number[][]>(createEmptyBoard())
+const originalBoard = ref<number[][]>(createEmptyBoard())
 const message = ref('')
 const isLoading = ref(false)
 
 function createEmptyBoard(): number[][] {
   return Array.from({ length: 9 }, () => Array(9).fill(0))
+}
+
+function createTestBoard(): number[][] {
+  return [
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9],
+  ]
+}
+
+function cloneBoard(source: number[][]): number[][] {
+  return source.map(row => [...row])
 }
 
 const displayBoard = computed(() => board.value)
@@ -72,22 +91,18 @@ function onCellKeydown(row: number, col: number, event: KeyboardEvent) {
       event.preventDefault()
       focusCell(row - 1, col)
       break
-
     case 'ArrowDown':
       event.preventDefault()
       focusCell(row + 1, col)
       break
-
     case 'ArrowLeft':
       event.preventDefault()
       focusCell(row, col - 1)
       break
-
     case 'ArrowRight':
       event.preventDefault()
       focusCell(row, col + 1)
       break
-
     case 'Backspace':
     case 'Delete':
       board.value[row][col] = 0
@@ -100,6 +115,8 @@ async function solveBoard() {
   message.value = ''
 
   try {
+    originalBoard.value = cloneBoard(board.value)
+
     const response = await fetch(`${API_BASE_URL}/api/Sudoku/solve`, {
       method: 'POST',
       headers: {
@@ -129,7 +146,15 @@ async function solveBoard() {
 
 function clearBoard() {
   board.value = createEmptyBoard()
+  originalBoard.value = createEmptyBoard()
   message.value = ''
+  focusCell(0, 0)
+}
+
+function loadTestBoard() {
+  board.value = createTestBoard()
+  originalBoard.value = createEmptyBoard()
+  message.value = 'Test puzzle loaded.'
   focusCell(0, 0)
 }
 
@@ -138,6 +163,10 @@ function boxClass(row: number, col: number) {
     'box-right': col === 2 || col === 5,
     'box-bottom': row === 2 || row === 5,
   }
+}
+
+function isSolvedCell(row: number, col: number): boolean {
+  return originalBoard.value[row][col] === 0 && board.value[row][col] !== 0
 }
 </script>
 
@@ -157,7 +186,7 @@ function boxClass(row: number, col: number) {
           inputmode="numeric"
           maxlength="1"
           class="cell"
-          :class="boxClass(rowIndex, colIndex)"
+          :class="[boxClass(rowIndex, colIndex), { 'solved-cell': isSolvedCell(rowIndex, colIndex) }]"
           @input="onCellInput(rowIndex, colIndex, $event)"
           @keydown="onCellKeydown(rowIndex, colIndex, $event)"
         />
@@ -165,13 +194,18 @@ function boxClass(row: number, col: number) {
     </div>
 
     <div class="actions">
-      <button @click="solveBoard" :disabled="isLoading">
-        {{ isLoading ? 'Solving...' : 'Solve' }}
+      <button type="button" class="secondary" @click="loadTestBoard" :disabled="isLoading">
+        Test
       </button>
 
       <button type="button" class="secondary" @click="clearBoard" :disabled="isLoading">
         Clear
       </button>
+
+      <button type="button" @click="solveBoard" :disabled="isLoading">
+        {{ isLoading ? 'Solving...' : 'Solve' }}
+      </button>
+
     </div>
 
     <p v-if="message" class="message">{{ message }}</p>
@@ -211,11 +245,17 @@ h1 {
   border: 1px solid #bbb;
   text-align: center;
   font-size: 20px;
+  font-weight: 600;
+  color: #222;
   outline: none;
 }
 
 .cell:focus {
   background: #eef5ff;
+}
+
+.solved-cell {
+  color: #2563eb;
 }
 
 .box-right {
