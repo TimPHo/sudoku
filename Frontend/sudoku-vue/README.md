@@ -42,7 +42,7 @@ http://localhost:5173
 ## Build for production
 ```bash
 npm run build
-'''
+```
 
 ## Backend API
 
