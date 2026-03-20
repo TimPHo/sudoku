@@ -163,21 +163,21 @@ function loadTestBoard() {
       </button>
     </div>
 
-    <p v-if="message" class="message">{{ message }}</p>
+    <p class="message">{{ message || '\u00A0' }}</p>
   </main>
 </template>
 
 <style scoped>
 .page {
   max-width: 520px;
-  margin: 0 auto;
-  padding: 8px 24px 24px;
+  margin: 0 a uto;
+  padding: 0 24px 24px;
   text-align: center;
 }
 
 h1 {
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .subtitle {
@@ -240,7 +240,8 @@ button {
 }
 
 .message {
-  margin-top: 16px;
+  margin-top: 12px;
+  min-height: 24px;
   font-weight: 600;
 }
 </style>
