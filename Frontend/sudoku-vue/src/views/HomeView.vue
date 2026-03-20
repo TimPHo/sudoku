@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { API_BASE_URL } from '@/config'
+import SudokuBoard from '@/components/SudokuBoard.vue'
+import { cloneBoard, createEmptyBoard, createTestBoard } from '@/utilities/sudoku'
 
 type SudokuResponseDto = {
   board: number[][]
@@ -12,30 +14,6 @@ const board = ref<number[][]>(createEmptyBoard())
 const originalBoard = ref<number[][]>(createEmptyBoard())
 const message = ref('')
 const isLoading = ref(false)
-
-function createEmptyBoard(): number[][] {
-  return Array.from({ length: 9 }, () => Array(9).fill(0))
-}
-
-function createTestBoard(): number[][] {
-  return [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-  ]
-}
-
-function cloneBoard(source: number[][]): number[][] {
-  return source.map(row => [...row])
-}
-
-const displayBoard = computed(() => board.value)
 
 function getCellId(row: number, col: number): string {
   return `cell-${row}-${col}`
@@ -157,17 +135,6 @@ function loadTestBoard() {
   message.value = 'Test puzzle loaded.'
   focusCell(0, 0)
 }
-
-function boxClass(row: number, col: number) {
-  return {
-    'box-right': col === 2 || col === 5,
-    'box-bottom': row === 2 || row === 5,
-  }
-}
-
-function isSolvedCell(row: number, col: number): boolean {
-  return originalBoard.value[row]![col] === 0 && board.value[row]![col] !== 0
-}
 </script>
 
 <template>
@@ -175,23 +142,12 @@ function isSolvedCell(row: number, col: number): boolean {
     <h1>Sudoku Solver</h1>
     <p class="subtitle">Enter numbers 1–9. Leave blank for empty cells.</p>
 
-    <div class="board">
-      <div v-for="(row, rowIndex) in displayBoard" :key="rowIndex" class="row">
-        <input
-          v-for="(cell, colIndex) in row"
-          :id="getCellId(rowIndex, colIndex)"
-          :key="`${rowIndex}-${colIndex}`"
-          :value="cell === 0 ? '' : cell"
-          type="text"
-          inputmode="numeric"
-          maxlength="1"
-          class="cell"
-          :class="[boxClass(rowIndex, colIndex), { 'solved-cell': isSolvedCell(rowIndex, colIndex) }]"
-          @input="onCellInput(rowIndex, colIndex, $event)"
-          @keydown="onCellKeydown(rowIndex, colIndex, $event)"
-        />
-      </div>
-    </div>
+    <SudokuBoard
+      :board="board"
+      :original-board="originalBoard"
+      @cell-input="onCellInput"
+      @cell-keydown="onCellKeydown"
+    />
 
     <div class="actions">
       <button type="button" class="secondary" @click="loadTestBoard" :disabled="isLoading">
@@ -205,7 +161,6 @@ function isSolvedCell(row: number, col: number): boolean {
       <button type="button" @click="solveBoard" :disabled="isLoading">
         {{ isLoading ? 'Solving...' : 'Solve' }}
       </button>
-
     </div>
 
     <p v-if="message" class="message">{{ message }}</p>
@@ -229,17 +184,17 @@ h1 {
   color: #555;
 }
 
-.board {
+:deep(.board) {
   display: inline-block;
   border: 3px solid #222;
   background: white;
 }
 
-.row {
+:deep(.row) {
   display: flex;
 }
 
-.cell {
+:deep(.cell) {
   width: 44px;
   height: 44px;
   border: 1px solid #bbb;
@@ -250,19 +205,19 @@ h1 {
   outline: none;
 }
 
-.cell:focus {
+:deep(.cell:focus) {
   background: #eef5ff;
 }
 
-.solved-cell {
+:deep(.solved-cell) {
   color: #2563eb;
 }
 
-.box-right {
+:deep(.box-right) {
   border-right: 3px solid #222;
 }
 
-.box-bottom {
+:deep(.box-bottom) {
   border-bottom: 3px solid #222;
 }
 
