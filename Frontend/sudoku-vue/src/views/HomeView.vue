@@ -171,11 +171,12 @@ function loadTestBoard() {
 .page {
   max-width: 520px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 8px 24px 24px;
   text-align: center;
 }
 
 h1 {
+  margin-top: 0;
   margin-bottom: 8px;
 }
 

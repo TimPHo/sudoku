@@ -40,7 +40,9 @@ App will run at:
 http://localhost:5173
 
 ## Build for production
+```bash
 npm run build
+'''
 
 ## Backend API
 
@@ -58,9 +60,9 @@ This project was built as a learning/demo application
 Only minimal features are implemented; improvements are welcome
 
 ## Future Improvements
-Auto-solve visualization
-Difficulty level
-Better UI/UX styling
-Error highlighting
-Mobile optimization
-Tests & UI validation
+- Auto-solve visualization
+- Difficulty level
+- Better UI/UX styling
+- Error highlighting
+- Mobile optimization
+- Validation & unit tests
