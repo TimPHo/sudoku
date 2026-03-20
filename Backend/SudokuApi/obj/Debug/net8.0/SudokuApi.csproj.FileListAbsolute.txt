@@ -32,3 +32,4 @@ C:\Users\Tim\Sudoku\Backend\SudokuApi\obj\Debug\net8.0\SudokuApi.xml
 C:\Users\Tim\Sudoku\Backend\SudokuApi\obj\Debug\net8.0\SudokuApi.pdb
 C:\Users\Tim\Sudoku\Backend\SudokuApi\obj\Debug\net8.0\SudokuApi.genruntimeconfig.cache
 C:\Users\Tim\Sudoku\Backend\SudokuApi\obj\Debug\net8.0\ref\SudokuApi.dll
+C:\Users\Tim\Sudoku\Backend\SudokuApi\obj\Debug\net8.0\SudokuApi.sourcelink.json
